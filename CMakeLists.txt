@@ -1,7 +1,12 @@
 ﻿
-set(GLFW_PATH ${CMAKE_SOURCE_DIR}/libraries/glfw)
+if(WIN32)
+    set(GLFW_PATH ${CMAKE_SOURCE_DIR}/libraries/glfw)
+    set(VULKAN_SDK_PATH  C:/VulkanSDK/1.3.216.0)
+endif()
+
+
 set(GLM_PATH ${CMAKE_SOURCE_DIR}/libraries/glm)
-set(VULKAN_SDK_PATH  C:/VulkanSDK/1.3.216.0)
+
 
 
 cmake_minimum_required (VERSION 3.23)
@@ -10,7 +15,7 @@ project ("NooM")
 
 
 
-
+message(STATUS "using ${CMAKE_GENERATOR}")
 
 ########################################################################################################################
 
@@ -102,7 +107,15 @@ target_link_directories(${PROJECT_NAME} PUBLIC
         ${GLFW_LIB}
         )
 
-target_link_libraries(${PROJECT_NAME} glfw3 vulkan-1)
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME} glfw3 vulkan-1)
+endif()
+
+if(UNIX)
+    target_link_libraries(${PROJECT_NAME} -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi)
+endif()
+
+
 
 
 
