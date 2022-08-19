@@ -1,0 +1,4 @@
+D:/GitHub/NooM/cmake-build-debug/CMakeFiles/NooM.dir
+D:/GitHub/NooM/cmake-build-debug/CMakeFiles/Shaders.dir
+D:/GitHub/NooM/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/GitHub/NooM/cmake-build-debug/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,3 @@
+C:\Users\NukaC\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\222.3739.54\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\NooM.dir/objects.a
+C:\Users\NukaC\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\222.3739.54\bin\mingw\bin\ar.exe qc CMakeFiles\NooM.dir/objects.a @CMakeFiles\NooM.dir\objects1.rsp
+C:\Users\NukaC\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\222.3739.54\bin\mingw\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\NooM.dir/objects.a -Wl,--no-whole-archive -o NooM.exe -Wl,--out-implib,libNooM.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\NooM.dir\linklibs.rsp
