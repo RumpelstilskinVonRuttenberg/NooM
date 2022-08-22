@@ -12,7 +12,8 @@
 namespace NooM {
 
     NooM_SwapChain::NooM_SwapChain(NooM_Device &deviceRef, VkExtent2D extent)
-            : device{deviceRef}, windowExtent{extent} {
+            : device{deviceRef}, windowExtent{extent}
+    {
         createSwapChain();
         createImageViews();
         createRenderPass();
@@ -21,38 +22,43 @@ namespace NooM {
         createSyncObjects();
     }
 
-    NooM_SwapChain::~NooM_SwapChain() {
-        for (auto imageView: swapChainImageViews) {
-            vkDestroyImageView(device.device(), imageView, nullptr);
-        }
+    NooM_SwapChain::~NooM_SwapChain()
+    {
+        for (auto imageView: swapChainImageViews)
+            {vkDestroyImageView(device.device(), imageView, nullptr);}
         swapChainImageViews.clear();
 
-        if (swapChain != nullptr) {
+        if (swapChain != nullptr)
+        {
             vkDestroySwapchainKHR(device.device(), swapChain, nullptr);
             swapChain = nullptr;
         }
 
-        for (int i = 0; i < depthImages.size(); i++) {
+        for (int i = 0; i < depthImages.size(); i++)
+        {
             vkDestroyImageView(device.device(), depthImageViews[i], nullptr);
             vkDestroyImage(device.device(), depthImages[i], nullptr);
             vkFreeMemory(device.device(), depthImageMemorys[i], nullptr);
         }
 
-        for (auto framebuffer: swapChainFramebuffers) {
+        for (auto framebuffer: swapChainFramebuffers)
+        {
             vkDestroyFramebuffer(device.device(), framebuffer, nullptr);
         }
 
         vkDestroyRenderPass(device.device(), renderPass, nullptr);
 
         // cleanup synchronization objects
-        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+        {
             vkDestroySemaphore(device.device(), renderFinishedSemaphores[i], nullptr);
             vkDestroySemaphore(device.device(), imageAvailableSemaphores[i], nullptr);
             vkDestroyFence(device.device(), inFlightFences[i], nullptr);
         }
     }
 
-    VkResult NooM_SwapChain::acquireNextImage(uint32_t *imageIndex) {
+    VkResult NooM_SwapChain::acquireNextImage(uint32_t *imageIndex)
+    {
         vkWaitForFences(
                 device.device(),
                 1,
@@ -71,8 +77,8 @@ namespace NooM {
         return result;
     }
 
-    VkResult NooM_SwapChain::submitCommandBuffers(
-            const VkCommandBuffer *buffers, uint32_t *imageIndex) {
+    VkResult NooM_SwapChain::submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex)
+    {
         if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(device.device(), 1, &imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
         }
@@ -119,7 +125,8 @@ namespace NooM {
         return result;
     }
 
-    void NooM_SwapChain::createSwapChain() {
+    void NooM_SwapChain::createSwapChain()
+    {
         SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
 
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
@@ -180,7 +187,8 @@ namespace NooM {
         swapChainExtent = extent;
     }
 
-    void NooM_SwapChain::createImageViews() {
+    void NooM_SwapChain::createImageViews()
+    {
         swapChainImageViews.resize(swapChainImages.size());
         for (size_t i = 0; i < swapChainImages.size(); i++) {
             VkImageViewCreateInfo viewInfo{};
@@ -201,7 +209,8 @@ namespace NooM {
         }
     }
 
-    void NooM_SwapChain::createRenderPass() {
+    void NooM_SwapChain::createRenderPass()
+    {
         VkAttachmentDescription depthAttachment{};
         depthAttachment.format = findDepthFormat();
         depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -262,7 +271,8 @@ namespace NooM {
         }
     }
 
-    void NooM_SwapChain::createFramebuffers() {
+    void NooM_SwapChain::createFramebuffers()
+    {
         swapChainFramebuffers.resize(imageCount());
         for (size_t i = 0; i < imageCount(); i++) {
             std::array<VkImageView, 2> attachments = {swapChainImageViews[i], depthImageViews[i]};
@@ -287,7 +297,8 @@ namespace NooM {
         }
     }
 
-    void NooM_SwapChain::createDepthResources() {
+    void NooM_SwapChain::createDepthResources()
+    {
         VkFormat depthFormat = findDepthFormat();
         VkExtent2D swapChainExtent = getSwapChainExtent();
 
@@ -335,7 +346,8 @@ namespace NooM {
         }
     }
 
-    void NooM_SwapChain::createSyncObjects() {
+    void NooM_SwapChain::createSyncObjects()
+    {
         imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
@@ -359,8 +371,8 @@ namespace NooM {
         }
     }
 
-    VkSurfaceFormatKHR NooM_SwapChain::chooseSwapSurfaceFormat(
-            const std::vector<VkSurfaceFormatKHR> &availableFormats) {
+    VkSurfaceFormatKHR NooM_SwapChain::chooseSwapSurfaceFormat( const std::vector<VkSurfaceFormatKHR> &availableFormats)
+    {
         for (const auto &availableFormat: availableFormats) {
             if (availableFormat.format == VK_FORMAT_B8G8R8A8_UNORM &&
                 availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
@@ -371,17 +383,21 @@ namespace NooM {
         return availableFormats[0];
     }
 
-    VkPresentModeKHR NooM_SwapChain::chooseSwapPresentMode(
-            const std::vector<VkPresentModeKHR> &availablePresentModes) {
-        for (const auto &availablePresentMode: availablePresentModes) {
-            if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
+    VkPresentModeKHR NooM_SwapChain::chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes)
+    {
+        /*for (const auto &availablePresentMode: availablePresentModes)
+        {
+            if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR)
+            {
                 std::cout << "Present mode: Mailbox" << std::endl;
                 return availablePresentMode;
             }
-        }
+        }*/
 
-        // for (const auto &availablePresentMode : availablePresentModes) {
-        //   if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) {
+        // for (const auto &availablePresentMode : availablePresentModes)
+        // {
+        //   if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR)
+        //   {
         //     std::cout << "Present mode: Immediate" << std::endl;
         //     return availablePresentMode;
         //   }
@@ -391,10 +407,12 @@ namespace NooM {
         return VK_PRESENT_MODE_FIFO_KHR;
     }
 
-    VkExtent2D NooM_SwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities) {
-        if (capabilities.currentExtent.width !=
-            std::numeric_limits<uint32_t>::max()) { return capabilities.currentExtent; }
-        else {
+    VkExtent2D NooM_SwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities)
+    {
+        if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
+            { return capabilities.currentExtent; }
+        else
+        {
             VkExtent2D actualExtent = windowExtent;
             actualExtent.width = std::max(
                     capabilities.minImageExtent.width,
@@ -407,7 +425,8 @@ namespace NooM {
         }
     }
 
-    VkFormat NooM_SwapChain::findDepthFormat() {
+    VkFormat NooM_SwapChain::findDepthFormat()
+    {
         return device.findSupportedFormat(
                 {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
                 VK_IMAGE_TILING_OPTIMAL,

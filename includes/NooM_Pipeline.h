@@ -33,6 +33,8 @@ namespace NooM
         NooM_Pipeline(const NooM_Pipeline& ) = delete;
         NooM_Pipeline & operator=(const NooM_Pipeline&) = delete;
 
+    void bind(VkCommandBuffer commandBuffer);
+
     static PipelineConfigInfo defaultPipelineConfigInfo(uint32_t width, uint32_t height);
 
     private:

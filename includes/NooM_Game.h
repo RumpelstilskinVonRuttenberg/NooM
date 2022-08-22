@@ -33,15 +33,9 @@ namespace NooM
 		NooM_Window noomWindow{ WIDTH, HEIGHT, "TA MERE LA PUTE!!!" };
         NooM_Device noomDevice{noomWindow};
 		NooM_SwapChain noomSwapChain{noomDevice, noomWindow.getExtent()};
-
         std::unique_ptr<NooM_Pipeline> nooMPipeline;
-        /*NooM_Pipeline noomPipeline{noomDevice,
-                                   "../shaders/Shad_Simple.vert.spv",
-                                   "../shaders/Shad_Simple.frag.spv",
-                                   NooM_Pipeline::defaultPipelineConfigInfo(WIDTH, HEIGHT)};*/
+
         VkPipelineLayout pipelineLayout;
         std::vector<VkCommandBuffer> commandBuffers;
-
-
     };
 }
